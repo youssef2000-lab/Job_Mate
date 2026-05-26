@@ -1,0 +1,252 @@
+.checkout-container {
+  max-width: 1000px;
+}
+
+.checkout-form-layout {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 40px;
+}
+
+.checkout-card {
+  padding: 40px;
+  border-radius: var(--radius-lg);
+}
+
+.checkout-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+
+.checkout-desc {
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  font-size: 0.95rem;
+}
+
+.payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon .icon {
+  position: absolute;
+  left: 14px;
+  color: var(--text-muted);
+}
+
+.input-with-icon input {
+  padding-left: 42px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.security-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin: 10px 0;
+}
+
+/* Summary Card */
+.summary-card {
+  padding: 30px;
+  border-radius: var(--radius-lg);
+}
+
+.summary-card h4 {
+  margin-bottom: 24px;
+  font-size: 1.2rem;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.summary-card hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 20px 0;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.summary-total strong {
+  font-size: 1.5rem;
+  color: var(--primary);
+}
+
+.escrow-notice {
+  display: flex;
+  gap: 15px;
+  background: var(--secondary);
+  color: white;
+  padding: 20px;
+  border-radius: var(--radius-md);
+}
+
+.escrow-notice strong {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.escrow-notice p {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+/* Review Step */
+.review-step {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: var(--radius-lg);
+}
+
+.review-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.review-header h2 {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.rating-input-wrapper {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.rating-input-wrapper label {
+  display: block;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.stars-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.star-icon {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.star-icon:hover {
+  transform: scale(1.2);
+}
+
+.review-actions {
+  display: flex;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.review-actions button {
+  flex: 1;
+}
+
+/* Final Confirmation */
+.final-confirmation-step {
+  padding: 80px 0;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.success-circle {
+  width: 120px;
+  height: 120px;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 30px;
+  box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
+}
+
+.confirmation-msg {
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: linear-gradient(45deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 15px;
+}
+
+.redirect-notice {
+  margin: 40px 0;
+  color: var(--text-muted);
+}
+
+.loading-bar {
+  width: 200px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 15px auto;
+  overflow: hidden;
+}
+
+.loading-progress {
+  width: 100%;
+  height: 100%;
+  background: var(--primary);
+  transform-origin: left;
+  animation: progressPulse 4s linear;
+}
+
+@keyframes progressPulse {
+  0% { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.bounce-in {
+  animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@media (max-width: 768px) {
+  .checkout-form-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .confirmation-msg {
+    font-size: 2.5rem;
+  }
+}
