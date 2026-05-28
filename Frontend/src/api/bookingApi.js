@@ -21,7 +21,7 @@ export const updateBookingStatusApi = (id, payload) =>
 // src/api/reviewApi.js
 // ─────────────────────────────────────────────────────────────
 
-import client from './client';
+
 
 // ── Submit review ─────────────────────────────────────────────
 // payload: { booking_id, rating, comment }
