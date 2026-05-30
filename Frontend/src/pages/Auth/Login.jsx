@@ -1,7 +1,13 @@
+// src/pages/Auth/Login.jsx
+// FIXES:
+// • Replaced `login` (doesn't exist) with `loginThunk`
+// • Replaced `clearError` — still valid, kept
+// • Removed stale isLoggedIn redirect (modal handles this; page version navigates on success)
+
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { login, clearError } from '../../store/authSlice';
+import { loginThunk, clearError } from '../../store/authSlice'; // ← was `login` (undefined)
 import { Mail, Lock, ChevronRight, AlertCircle } from 'lucide-react';
 import { useToast } from '../../hooks/useToast.jsx';
 import './Auth.css';
@@ -10,24 +16,15 @@ const Login = () => {
   const { showToast } = useToast();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { error: authError, isLoggedIn } = useSelector(state => state.auth);
-  
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-  const [error, setError] = useState('');
+  const { error: authError, isLoggedIn, loading } = useSelector((state) => state.auth);
 
-  // Clear any existing auth errors when component mounts
-  useEffect(() => {
-    dispatch(clearError());
-  }, [dispatch]);
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [localError, setLocalError] = useState('');
+
+  useEffect(() => { dispatch(clearError()); }, [dispatch]);
 
   useEffect(() => {
-    if (authError) {
-      setError(authError);
-      showToast(authError, 'error');
-    }
+    if (authError) { setLocalError(authError); showToast(authError, 'error'); }
   }, [authError, showToast]);
 
   useEffect(() => {
@@ -39,13 +36,13 @@ const Login = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    if (error) setError('');
-    if (authError) dispatch(clearError());
+    if (localError) setLocalError('');
+    if (authError)  dispatch(clearError());
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(login(formData));
+    dispatch(loginThunk(formData)); // ← was dispatch(login(formData)) — dispatched undefined
   };
 
   return (
@@ -57,10 +54,10 @@ const Login = () => {
             <p>Connectez-vous à votre compte JobMate.</p>
           </div>
 
-          {error && (
+          {localError && (
             <div className="auth-error fade-in">
               <AlertCircle size={18} />
-              <span>{error}</span>
+              <span>{localError}</span>
             </div>
           )}
 
@@ -69,14 +66,8 @@ const Login = () => {
               <label>Email</label>
               <div className="input-wrapper">
                 <Mail className="input-icon" size={18} />
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="jean@example.com"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                />
+                <input type="email" name="email" placeholder="jean@example.com"
+                  required value={formData.email} onChange={handleChange} />
               </div>
             </div>
 
@@ -84,22 +75,13 @@ const Login = () => {
               <label>Mot de passe</label>
               <div className="input-wrapper">
                 <Lock className="input-icon" size={18} />
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="••••••••"
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                />
+                <input type="password" name="password" placeholder="••••••••"
+                  required value={formData.password} onChange={handleChange} />
               </div>
-              <Link to="/forgot-password" style={{ fontSize: '0.8rem', color: 'var(--primary)', textAlign: 'right', display: 'block', marginTop: '5px' }}>
-                Mot de passe oublié ?
-              </Link>
             </div>
 
-            <button type="submit" className="btn-primary btn-block">
-              Se connecter <ChevronRight size={18} />
+            <button type="submit" className="btn-primary btn-block" disabled={loading}>
+              {loading ? 'Connexion...' : 'Se connecter'} {!loading && <ChevronRight size={18} />}
             </button>
           </form>
 

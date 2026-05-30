@@ -1,18 +1,35 @@
 // src/components/common/Navbar.jsx
-// ─────────────────────────────────────────────────────────────
-// FIX E — Imported { logout } which doesn't exist in the new authSlice.
-//   The new authSlice only exports the async logoutThunk.
-//   dispatch(logout()) dispatched undefined → state never cleared,
-//   user appeared permanently logged in after clicking logout.
-// ─────────────────────────────────────────────────────────────
+// FIXES:
+// • logout → logoutThunk  (logout sync action doesn't exist; user was never logged out)
+// • Avatar displayed next to user name when available
+// • Admin link shown for admin role
+// • Async handleLogout so token is revoked before redirect
 
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { logoutThunk } from '../../store/authSlice'; // FIX E: was `logout`
-import { Menu, X, User, LogOut, Briefcase } from 'lucide-react';
+import { logoutThunk } from '../../store/authSlice'; // ← was `logout` (undefined)
+import { Menu, X, User, LogOut, Briefcase, Shield } from 'lucide-react';
 import { useAuthModal } from '../../context/AuthModalContext';
 import './Navbar.css';
+
+const NavAvatar = ({ user }) => {
+  if (user?.avatar_url) {
+    return (
+      <img
+        src={user.avatar_url}
+        alt={user.name}
+        className="nav-avatar-img"
+        onError={(e) => { e.target.style.display = 'none'; }}
+      />
+    );
+  }
+  return (
+    <div className="nav-avatar-fallback">
+      {user?.name?.[0]?.toUpperCase() ?? <User size={14} />}
+    </div>
+  );
+};
 
 const Navbar = () => {
   const [isOpen,   setIsOpen]   = useState(false);
@@ -22,7 +39,6 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-
   const isHomePage = location.pathname === '/';
 
   useEffect(() => {
@@ -31,22 +47,21 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // FIX E: async dispatch of logoutThunk — calls API, clears token + state
   const handleLogout = async () => {
-    await dispatch(logoutThunk());
+    await dispatch(logoutThunk()); // ← was dispatch(logout()) — undefined action
     navigate('/');
     setIsOpen(false);
   };
 
   return (
-    <nav className="navbar scrolled glass">
+    <nav className={`navbar glass ${scrolled ? 'scrolled' : ''}`}>
       <div className="container nav-container">
         <Link to="/" className="logo">
           <Briefcase className="logo-icon" size={28} />
           <span>JobMate</span>
         </Link>
 
-        {/* Desktop Menu */}
+        {/* Desktop */}
         <div className="nav-links desktop">
           <Link to="/browse">Trouver un service</Link>
           <Link
@@ -64,15 +79,15 @@ const Navbar = () => {
           {isLoggedIn ? (
             <>
               {currentUser?.role === 'admin' && (
-                <Link to="/admin" style={{ color: 'var(--primary)', fontWeight: 600 }}>
-                  Admin
+                <Link to="/admin" className="nav-admin-badge">
+                  <Shield size={14} /> Admin
                 </Link>
               )}
               <Link to="/dashboard" className="nav-user">
-                <User size={18} />
+                <NavAvatar user={currentUser} />
                 <span>{currentUser?.name}</span>
               </Link>
-              <button onClick={handleLogout} className="btn-logout">
+              <button onClick={handleLogout} className="btn-logout" title="Déconnexion">
                 <LogOut size={18} />
               </button>
             </>
@@ -84,13 +99,12 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Toggle */}
         <button className="mobile-toggle" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile menu */}
       {isOpen && (
         <div className="mobile-menu glass fade-in">
           <Link to="/browse" onClick={() => setIsOpen(false)}>Trouver un service</Link>
@@ -109,7 +123,14 @@ const Navbar = () => {
 
           {isLoggedIn ? (
             <>
+              <div className="mobile-user-info">
+                <NavAvatar user={currentUser} />
+                <span>{currentUser?.name}</span>
+              </div>
               <Link to="/dashboard" onClick={() => setIsOpen(false)}>Tableau de bord</Link>
+              {currentUser?.role === 'admin' && (
+                <Link to="/admin" onClick={() => setIsOpen(false)}>Admin Panel</Link>
+              )}
               <button onClick={handleLogout} className="btn-logout-mobile">Déconnexion</button>
             </>
           ) : (

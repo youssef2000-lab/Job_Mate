@@ -1,0 +1,58 @@
+/* src/components/common/Navbar.css — APPEND these rules to existing file */
+
+/* ── Nav avatar ────────────────────────────────────────────── */
+.nav-avatar-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary, #22c55e);
+  flex-shrink: 0;
+}
+
+.nav-avatar-fallback {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--primary, #22c55e);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ── Admin badge ───────────────────────────────────────────── */
+.nav-admin-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary, #22c55e);
+  border: 1px solid var(--primary, #22c55e);
+  border-radius: 20px;
+  padding: 3px 10px;
+  text-decoration: none;
+}
+
+/* ── Mobile user info row ──────────────────────────────────── */
+.mobile-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 0.25rem;
+}

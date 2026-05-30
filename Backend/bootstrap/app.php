@@ -1,5 +1,12 @@
 <?php
 
+// Backend/bootstrap/app.php
+// ─────────────────────────────────────────────────────────────
+// FIX 2: API routes were never loaded.
+// The original withRouting() had no `api:` entry, so routes/api.php
+// was silently ignored. Every request to /api/* returned HTTP 404.
+// ─────────────────────────────────────────────────────────────
+
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -7,8 +14,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
-        // ✅ FIX 1: API routes were never registered — all endpoints returned 404
-        api: __DIR__.'/../routes/api.php',
+        api: __DIR__.'/../routes/api.php',   // ← FIX 2: was missing entirely
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
