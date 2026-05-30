@@ -1,4 +1,6 @@
-// src/api/bookingApi.js
+// Frontend/src/api/bookingApi.js
+// ✅ FIX 9: Removed dead review code appended at bottom from previous concatenation error.
+//   The real reviewApi.js already exists as a separate file.
 
 import client from './client';
 
@@ -12,22 +14,6 @@ export const getBookingsApi = () =>
   client.get('/bookings');
 
 // ── Update booking status ─────────────────────────────────────
-// payload: { status } or { payment_status }
+// payload: { status } OR { payment_status } OR both
 export const updateBookingStatusApi = (id, payload) =>
   client.put(`/bookings/${id}/status`, payload);
-
-
-// ─────────────────────────────────────────────────────────────
-// src/api/reviewApi.js
-// ─────────────────────────────────────────────────────────────
-
-
-
-// ── Submit review ─────────────────────────────────────────────
-// payload: { booking_id, rating, comment }
-export const createReviewApi = (payload) =>
-  client.post('/reviews', payload);
-
-// ── Get reviews for a provider ────────────────────────────────
-export const getProviderReviewsApi = (providerId) =>
-  client.get(`/providers/${providerId}/reviews`);

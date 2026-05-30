@@ -1,35 +1,46 @@
-// src/pages/CheckoutPage.jsx
-// ─────────────────────────────────────────────────────────────
-// Calls the real backend to mark payment_status = 'paid'.
-// After payment, provider_phone + client_phone are returned.
-// ─────────────────────────────────────────────────────────────
+// Frontend/src/pages/CheckoutPage.jsx
+// ✅ FIX 8: If user navigates directly to /checkout/:id (e.g. browser refresh
+//   or bookmark), Redux bookings array is empty — booking is undefined immediately
+//   and the redirect fires before data can load.
+//   Fix: dispatch fetchBookings() on mount when the array is empty.
+//   Show a loading state while waiting.
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Shield, Lock, CreditCard, Check } from 'lucide-react';
-import { updateBookingStatus } from '../store/bookingSlice';
+import { updateBookingStatus, fetchBookings } from '../store/bookingSlice';
 import { useToast } from '../hooks/useToast';
 import './CheckoutPage.css';
 
 const CheckoutPage = () => {
-  const { id }     = useParams();
-  const navigate   = useNavigate();
-  const dispatch   = useDispatch();
+  const { id }        = useParams();
+  const navigate      = useNavigate();
+  const dispatch      = useDispatch();
   const { showToast } = useToast();
 
   const { bookings, loading } = useSelector((s) => s.bookings);
   const booking = bookings.find((b) => String(b.id) === String(id));
 
-  const [step, setStep]         = useState(1);
+  const [step,        setStep]        = useState(1);
   const [contactInfo, setContactInfo] = useState(null);
+  const [hydrating,   setHydrating]   = useState(false);
 
+  // ✅ FIX 8: load bookings if array is empty (direct navigation / hard refresh)
   useEffect(() => {
-    if (!booking) {
+    if (bookings.length === 0) {
+      setHydrating(true);
+      dispatch(fetchBookings()).finally(() => setHydrating(false));
+    }
+  }, []); // run once on mount
+
+  // Only redirect to dashboard when we are sure data is loaded and booking truly missing
+  useEffect(() => {
+    if (!hydrating && !loading && bookings.length > 0 && !booking) {
       showToast('Réservation non trouvée', 'error');
       navigate('/dashboard');
     }
-  }, [booking, navigate, showToast]);
+  }, [hydrating, loading, booking, bookings.length, navigate, showToast]);
 
   // Auto-redirect after success
   useEffect(() => {
@@ -48,7 +59,6 @@ const CheckoutPage = () => {
 
     if (updateBookingStatus.fulfilled.match(resultAction)) {
       const updated = resultAction.payload;
-      // Backend returns provider_phone + client_phone after paid
       setContactInfo({
         providerPhone: updated.provider_phone,
         clientPhone  : updated.client_phone,
@@ -60,7 +70,16 @@ const CheckoutPage = () => {
     }
   };
 
-  if (!booking) return null;
+  // ✅ FIX 8: show spinner while loading instead of redirecting immediately
+  if (hydrating || loading || !booking) {
+    return (
+      <div className="checkout-page section-padding">
+        <div className="container" style={{ textAlign: 'center', paddingTop: '4rem' }}>
+          <p>Chargement de la réservation...</p>
+        </div>
+      </div>
+    );
+  }
 
   const commission = (booking.amount * 0.25).toFixed(2);
 
@@ -154,12 +173,10 @@ const CheckoutPage = () => {
             <div className="success-circle"><Check size={80} /></div>
             <h1 className="confirmation-msg">Paiement Réussi !</h1>
 
-            {contactInfo && (
+            {contactInfo?.clientPhone && (
               <div className="contact-info-revealed glass">
                 <h3>Coordonnées débloquées</h3>
-                {contactInfo.clientPhone && (
-                  <p>📞 Client : <strong>{contactInfo.clientPhone}</strong></p>
-                )}
+                <p>📞 Client : <strong>{contactInfo.clientPhone}</strong></p>
               </div>
             )}
 

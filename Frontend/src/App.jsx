@@ -1,4 +1,11 @@
 // src/App.jsx
+// ─────────────────────────────────────────────────────────────
+// FIX C — Removed useToast() call from AppContent.
+//   App.jsx was calling useToast() to pass toasts/removeToast props
+//   down to ToastContainer. But since ToastProvider is now in main.jsx,
+//   ToastContainer can consume the context directly itself — no prop
+//   drilling needed. This also eliminates the circular dependency risk.
+// ─────────────────────────────────────────────────────────────
 
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -9,9 +16,7 @@ import { fetchMeThunk } from './store/authSlice';
 import Navbar    from './components/common/Navbar';
 import Footer    from './components/common/Footer';
 import AuthModal from './components/auth/AuthModal';
-import { ToastContainer } from './components/ui/Toast';
-import { useToast } from './hooks/useToast';
-
+import { ToastContainer } from './components/ui/Toast';  // FIX C: no more useToast here
 
 // ── Pages ─────────────────────────────────────────────────────
 import HomePage    from './pages/HomePage';
@@ -35,7 +40,6 @@ import { ProtectedRoute, AdminRoute } from './router/guards';
 
 function AppContent() {
   const dispatch = useDispatch();
-  const { toasts, removeToast } = useToast();
 
   // Re-hydrate user on hard refresh if a token exists
   useEffect(() => {
@@ -48,7 +52,8 @@ function AppContent() {
     <>
       <Navbar />
       <AuthModal />
-      <ToastContainer toasts={toasts} removeToast={removeToast} />
+      {/* FIX C: ToastContainer reads context internally — no props needed */}
+      <ToastContainer />
 
       <Routes>
         {/* ── Public ──────────────────────────────────── */}
