@@ -1,5 +1,12 @@
 <?php
 
+// Backend/app/Http/Controllers/Api/ServiceController.php
+// FIXES:
+// • transformService() now always loads provider relation before building the response
+//   (previously fresh('media') skipped provider → provider_name/avatar were null)
+// • handleMediaUploads: when path is a URL (seeded data), store it directly without calling store()
+// • transformService: returns avatar_url via accessor (already in User model)
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -24,17 +31,23 @@ class ServiceController extends Controller
         if ($request->search) {
             $q = $request->search;
             $query->where(function ($q2) use ($q) {
-                $q2->where('title', 'like', "%$q%")
-                   ->orWhere('description', 'like', "%$q%");
+                $q2->where('title',       'like', "%$q%")
+                   ->orWhere('description','like', "%$q%")
+                   ->orWhereHas('provider', fn($p) => $p->where('name', 'like', "%$q%"));
             });
         }
-        if ($request->city)    $query->where('city', 'like', '%' . $request->city . '%');
-        if ($request->country) $query->where('country', 'like', '%' . $request->country . '%');
-        if ($request->max_price) $query->where('price', '<=', $request->max_price);
+        if ($request->city)      $query->where('city',    'like', '%' . $request->city    . '%');
+        if ($request->country)   $query->where('country', 'like', '%' . $request->country . '%');
+        if ($request->max_price) $query->where('price',   '<=',   $request->max_price);
 
         $services = $query->latest()->paginate(12);
 
-        return response()->json($this->transformPaginated($services));
+        return response()->json([
+            'data'         => $services->map(fn($s) => $this->transformService($s)),
+            'current_page' => $services->currentPage(),
+            'last_page'    => $services->lastPage(),
+            'total'        => $services->total(),
+        ]);
     }
 
     // GET /api/services/{id}
@@ -45,8 +58,7 @@ class ServiceController extends Controller
             'media',
             'reviews.client:id,name,avatar',
         ]);
-
-        return response()->json($this->transformService($service, withContact: false));
+        return response()->json($this->transformService($service));
     }
 
     // POST /api/services
@@ -55,10 +67,12 @@ class ServiceController extends Controller
         $this->authorize('create', Service::class);
 
         $service = $request->user()->services()->create($request->validated());
-
         $this->handleMediaUploads($request, $service);
 
-        return response()->json($this->transformService($service->fresh('media')), 201);
+        // FIX: load provider so transformService can access provider_name
+        $service->load(['provider:id,name,avatar,is_verified', 'media']);
+
+        return response()->json($this->transformService($service), 201);
     }
 
     // PUT /api/services/{id}
@@ -69,7 +83,9 @@ class ServiceController extends Controller
         $service->update($request->validated());
         $this->handleMediaUploads($request, $service);
 
-        return response()->json($this->transformService($service->fresh('media')));
+        $service->load(['provider:id,name,avatar,is_verified', 'media']);
+
+        return response()->json($this->transformService($service));
     }
 
     // DELETE /api/services/{id}
@@ -77,17 +93,19 @@ class ServiceController extends Controller
     {
         $this->authorize('delete', $service);
 
-        // Clean up stored files
         foreach ($service->media as $media) {
-            Storage::disk('public')->delete($media->path);
+            // Only delete from storage if it's a local file, not an external URL
+            if (!str_starts_with($media->path, 'http')) {
+                Storage::disk('public')->delete($media->path);
+            }
         }
 
         $service->delete();
-
         return response()->json(['message' => 'Service supprimé.']);
     }
 
-    // ─── Private helpers ──────────────────────────
+    // ─── Private helpers ───────────────────────────────────────
+
     private function handleMediaUploads(Request $request, Service $service): void
     {
         if ($request->hasFile('gallery')) {
@@ -104,44 +122,53 @@ class ServiceController extends Controller
         }
     }
 
+    private function resolveMediaUrl(ServiceMedia $media): string
+    {
+        // Seeder stores full URLs; uploaded files use storage paths
+        if (str_starts_with($media->path, 'http')) {
+            return $media->path;
+        }
+        return asset('storage/' . $media->path);
+    }
+
     private function transformService(Service $service, bool $withContact = false): array
     {
+        // Ensure provider is loaded
+        if (!$service->relationLoaded('provider')) {
+            $service->load('provider:id,name,avatar,is_verified');
+        }
+        if (!$service->relationLoaded('media')) {
+            $service->load('media');
+        }
+
+        $gallery      = $service->media->where('type', 'gallery')->values();
+        $certificates = $service->media->where('type', 'certificate')->values();
+
         $data = [
-            'id'            => $service->id,
-            'provider_id'   => $service->provider_id,
-            'provider_name' => $service->provider?->name,
-            'provider_avatar' => $service->provider?->avatar_url,
-            'is_verified'   => $service->provider?->is_verified ?? false,
-            'title'         => $service->title,
-            'category'      => $service->category,
-            'description'   => $service->description,
-            'price'         => $service->price,
-            'city'          => $service->city,
-            'country'       => $service->country,
-            'video_url'     => $service->video_url,
-            'status'        => $service->status,
-            'rating'        => $service->average_rating,
-            'reviews_count' => $service->reviews_count,
-            'gallery'       => $service->gallery->map(fn($m) => $m->url)->values(),
-            'certificates'  => $service->certificates->map(fn($m) => $m->url)->values(),
-            'created_at'    => $service->created_at,
+            'id'             => $service->id,
+            'provider_id'    => $service->provider_id,
+            'provider_name'  => $service->provider?->name,
+            'provider_avatar'=> $service->provider?->avatar_url,  // via accessor on User model
+            'is_verified'    => $service->provider?->is_verified ?? false,
+            'title'          => $service->title,
+            'category'       => $service->category,
+            'description'    => $service->description,
+            'price'          => $service->price,
+            'city'           => $service->city,
+            'country'        => $service->country,
+            'video_url'      => $service->video_url,
+            'status'         => $service->status,
+            'rating'         => $service->average_rating,
+            'reviews_count'  => $service->reviews_count,
+            'gallery'        => $gallery->map(fn($m) => $this->resolveMediaUrl($m))->values(),
+            'certificates'   => $certificates->map(fn($m) => $this->resolveMediaUrl($m))->values(),
+            'created_at'     => $service->created_at,
         ];
 
-        // Phone is only exposed after payment
         if ($withContact) {
             $data['provider_phone'] = $service->provider?->phone;
         }
 
         return $data;
-    }
-
-    private function transformPaginated($paginated): array
-    {
-        return [
-            'data'         => collect($paginated->items())->map(fn($s) => $this->transformService($s)),
-            'current_page' => $paginated->currentPage(),
-            'last_page'    => $paginated->lastPage(),
-            'total'        => $paginated->total(),
-        ];
     }
 }
