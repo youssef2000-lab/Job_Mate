@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   PlusCircle, Briefcase, Calendar, CheckCircle,
   XCircle, CreditCard, ChevronRight, Trash2, User,
-  Camera, Star, MessageCircle, Edit2,
+  Camera, Star, MessageCircle, Edit2, Lock, Unlock, Copy
 } from 'lucide-react';
 import { fetchBookings, updateBookingStatus } from '../store/bookingSlice';
 import { fetchServices, deleteService }       from '../store/serviceSlice';
@@ -169,6 +169,17 @@ export default function Dashboard() {
     if (!window.confirm('Supprimer ce service ?')) return;
     await dispatch(deleteService(id));
     showToast('Service supprimé.');
+  };
+
+  const handleCopyPhone = async (phone) => {
+    if (!phone) return;
+    try {
+      await navigator.clipboard.writeText(phone);
+      showToast('Phone number copied successfully.');
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+      showToast('Erreur lors de la copie du numéro.', 'error');
+    }
   };
 
   return (
@@ -340,7 +351,14 @@ export default function Dashboard() {
                         </div>
                         <div className="booking-right">
                           <strong className="booking-amount">{b.amount}€</strong>
-                          <StatusBadge value={b.status} />
+                          <div style={{ display: 'flex', gap: '0.35rem', alignItems: 'center' }}>
+                            <StatusBadge value={b.status} />
+                            {isProvider && (
+                              <span className={`status-tag ${b.contact_unlocked ? 'paid' : 'unpaid'}`}>
+                                {b.contact_unlocked ? 'Unlocked' : 'Locked'}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
 
@@ -370,7 +388,7 @@ export default function Dashboard() {
                         </div>
                       )}
 
-                      {isProvider && b.status === 'paid' && (
+                      {isProvider && b.payment_status === 'paid' && b.status !== 'completed' && (
                         <div className="booking-actions">
                           <button className="btn-primary btn-sm" onClick={() => handleStatus(b.id, 'completed')}>
                             <CheckCircle size={14} /> Marquer terminé
@@ -378,8 +396,39 @@ export default function Dashboard() {
                         </div>
                       )}
 
-                      {isProvider && b.payment_status === 'paid' && b.client_phone && (
-                        <p className="contact-revealed">📞 {b.client_phone}</p>
+                      {isProvider && (
+                        <div className="contact-details-box">
+                          <div className="contact-header">
+                            <span className="contact-label">Coordonnées client :</span>
+                            <span className={`contact-badge ${b.contact_unlocked ? 'unlocked' : 'locked'}`}>
+                              {b.contact_unlocked ? (
+                                <><Unlock size={12} /> Unlocked</>
+                              ) : (
+                                <><Lock size={12} /> Locked</>
+                              )}
+                            </span>
+                          </div>
+                          <div className="contact-body">
+                            <div className="phone-wrapper">
+                              <span className="phone-number">
+                                {b.contact_unlocked ? b.client_phone : '**********'}
+                              </span>
+                              <button
+                                className="btn-copy-phone"
+                                disabled={!b.contact_unlocked}
+                                onClick={() => handleCopyPhone(b.client_phone)}
+                                title={b.contact_unlocked ? 'Copy Phone Number' : 'Contact information locked'}
+                              >
+                                <Copy size={14} /> {b.contact_unlocked ? 'Copy Phone Number' : 'Copy'}
+                              </button>
+                            </div>
+                            {!b.contact_unlocked && (
+                              <p className="lock-text">
+                                <Lock size={12} /> Contact information locked until payment.
+                              </p>
+                            )}
+                          </div>
+                        </div>
                       )}
 
                       {/* Client: review completed booking */}

@@ -67,7 +67,6 @@ const BrowsePage = () => {
     country    : s.country,
     certifications: s.certificates ?? [],
     videoUrl   : s.video_url,
-    isVerified : s.is_verified,
     avatar     : s.provider_avatar,
   }));
 

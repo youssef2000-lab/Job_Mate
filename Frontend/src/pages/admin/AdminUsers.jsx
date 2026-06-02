@@ -1,8 +1,8 @@
 // src/pages/admin/AdminUsers.jsx
 
 import { useEffect, useState } from 'react';
-import { getAdminUsersApi, deleteAdminUserApi, verifyAdminUserApi } from '../../api/adminApi';
-import { Trash2, ShieldCheck, ShieldOff, Search } from 'lucide-react';
+import { getAdminUsersApi, deleteAdminUserApi } from '../../api/adminApi';
+import { Trash2, Search } from 'lucide-react';
 import './Admin.css';
 
 export default function AdminUsers() {
@@ -26,12 +26,7 @@ export default function AdminUsers() {
     setUsers((prev) => prev.filter((u) => u.id !== id));
   };
 
-  const handleVerify = async (id) => {
-    const { data } = await verifyAdminUserApi(id);
-    setUsers((prev) =>
-      prev.map((u) => (u.id === id ? { ...u, is_verified: data.is_verified } : u))
-    );
-  };
+
 
   return (
     <div className="admin-page">
@@ -70,7 +65,6 @@ export default function AdminUsers() {
                 <th>Email</th>
                 <th>Téléphone</th>
                 <th>Rôle</th>
-                <th>Vérifié</th>
                 <th>Inscrit le</th>
                 <th>Actions</th>
               </tr>
@@ -93,19 +87,7 @@ export default function AdminUsers() {
                   <td>
                     <span className={`role-badge role-${u.role}`}>{u.role}</span>
                   </td>
-                  <td>
-                    {u.role === 'provider' && (
-                      <button
-                        className={`btn-icon ${u.is_verified ? 'verified' : 'unverified'}`}
-                        onClick={() => handleVerify(u.id)}
-                        title={u.is_verified ? 'Retirer la vérification' : 'Vérifier le compte'}
-                      >
-                        {u.is_verified
-                          ? <ShieldCheck size={18} />
-                          : <ShieldOff size={18} />}
-                      </button>
-                    )}
-                  </td>
+
                   <td>{new Date(u.created_at).toLocaleDateString()}</td>
                   <td>
                     {u.role !== 'admin' && (

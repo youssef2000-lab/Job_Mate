@@ -317,3 +317,103 @@
   .booking-card-top { flex-direction: column; align-items: flex-start; }
   .booking-right { flex-direction: row; align-items: center; }
 }
+
+/* Contact details box styling */
+.contact-details-box {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.contact-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.contact-label {
+  font-weight: 600;
+  color: #475569;
+}
+
+.contact-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.contact-badge.locked {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.contact-badge.unlocked {
+  background: #dcfce7;
+  color: #22c55e;
+}
+
+.contact-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.phone-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.phone-number {
+  font-family: monospace;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.btn-copy-phone {
+  background: white;
+  border: 1px solid #cbd5e1;
+  color: #64748b;
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+}
+
+.btn-copy-phone:hover:not(:disabled) {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+
+.btn-copy-phone:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.lock-text {
+  font-size: 0.8rem;
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}

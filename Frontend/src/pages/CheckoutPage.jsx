@@ -8,7 +8,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Shield, Lock, CreditCard, Check } from 'lucide-react';
+import { Shield, Lock, CreditCard, Check, Copy } from 'lucide-react';
 import { updateBookingStatus, fetchBookings } from '../store/bookingSlice';
 import { useToast } from '../hooks/useToast';
 import './CheckoutPage.css';
@@ -63,10 +63,22 @@ const CheckoutPage = () => {
         providerPhone: updated.provider_phone,
         clientPhone  : updated.client_phone,
       });
+      dispatch(fetchBookings());
       showToast('Paiement réussi !');
       setStep(3);
     } else {
       showToast(resultAction.payload ?? 'Erreur paiement.', 'error');
+    }
+  };
+
+  const handleCopyPhone = async (phone) => {
+    if (!phone) return;
+    try {
+      await navigator.clipboard.writeText(phone);
+      showToast('Phone number copied successfully.');
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+      showToast('Erreur lors de la copie du numéro.', 'error');
     }
   };
 
@@ -176,7 +188,16 @@ const CheckoutPage = () => {
             {contactInfo?.clientPhone && (
               <div className="contact-info-revealed glass">
                 <h3>Coordonnées débloquées</h3>
-                <p>📞 Client : <strong>{contactInfo.clientPhone}</strong></p>
+                <div className="phone-display-row">
+                  <p>📞 Client : <strong>{contactInfo.clientPhone}</strong></p>
+                  <button
+                    className="btn-copy-phone"
+                    onClick={() => handleCopyPhone(contactInfo.clientPhone)}
+                    title="Copy Phone Number"
+                  >
+                    <Copy size={14} /> Copy Phone Number
+                  </button>
+                </div>
               </div>
             )}
 

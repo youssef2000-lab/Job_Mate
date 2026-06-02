@@ -50,6 +50,5 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(functi
     Route::get('bookings',                [AdminController::class, 'bookings']);
     Route::delete('users/{user}',         [AdminController::class, 'deleteUser']);
     Route::delete('services/{service}',   [AdminController::class, 'deleteService']);
-    Route::put('users/{user}/verify',     [AdminController::class, 'verifyUser']);
     Route::put('services/{service}/status', [AdminController::class, 'updateServiceStatus']);
 });

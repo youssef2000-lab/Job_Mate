@@ -49,15 +49,6 @@ export default function AdminDashboard() {
         ))}
       </div>
 
-      {stats?.unverified_providers > 0 && (
-        <div className="admin-alert">
-          <CheckCircle size={18} />
-          <span>
-            {stats.unverified_providers} prestataire
-            {stats.unverified_providers > 1 ? 's' : ''} en attente de vérification.
-          </span>
-        </div>
-      )}
     </div>
   );
 }

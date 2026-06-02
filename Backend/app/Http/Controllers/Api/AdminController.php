@@ -23,8 +23,6 @@ class AdminController extends Controller
             'total_bookings'  => Booking::count(),
             'total_revenue'   => Booking::where('payment_status', 'paid')->sum('amount'),
             'pending_bookings'  => Booking::where('status', 'pending')->count(),
-            'unverified_providers' => User::where('role', 'provider')
-                ->where('is_verified', false)->count(),
         ]);
     }
 
@@ -83,15 +81,7 @@ class AdminController extends Controller
         return response()->json(['message' => 'Service supprimé.']);
     }
 
-    // PUT /api/admin/users/{id}/verify
-    public function verifyUser(User $user): JsonResponse
-    {
-        $user->update(['is_verified' => ! $user->is_verified]);
-        return response()->json([
-            'message'     => $user->is_verified ? 'Prestataire vérifié.' : 'Vérification retirée.',
-            'is_verified' => $user->is_verified,
-        ]);
-    }
+
 
     // PUT /api/admin/services/{id}/status
     public function updateServiceStatus(Request $request, Service $service): JsonResponse

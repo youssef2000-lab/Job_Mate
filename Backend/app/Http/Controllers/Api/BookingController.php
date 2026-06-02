@@ -56,7 +56,7 @@ class BookingController extends Controller
         // FIX 6: added 'client:id,name' — was missing, causing null client_name
         return response()->json(
             $this->transform(
-                $booking->load(['service:id,title', 'client:id,name', 'provider:id,name'])
+                $booking->load(['service:id,title', 'client:id,name,phone', 'provider:id,name,phone'])
             ),
             201
         );
@@ -70,7 +70,7 @@ class BookingController extends Controller
         $query = Booking::with([
             'service:id,title,price',
             'client:id,name,phone',
-            'provider:id,name',
+            'provider:id,name,phone',
         ])->latest();
 
         if ($user->isClient()) {
@@ -114,19 +114,33 @@ class BookingController extends Controller
         $booking->update($update);
         $booking->load('service', 'client', 'provider');
 
-        $data = $this->transform($booking);
-
-        // Expose contact info only after payment confirmed
-        if ($booking->payment_status === 'paid') {
-            $data['provider_phone'] = $booking->provider?->phone;
-            $data['client_phone']   = $booking->client?->phone;
-        }
-
-        return response()->json($data);
+        return response()->json($this->transform($booking));
     }
 
     private function transform(Booking $b): array
     {
+        $user = auth()->user();
+        $isAssignedProvider = $user && $user->id === $b->provider_id;
+        $isPaid = $b->payment_status === 'paid';
+
+        $clientPhone = null;
+        $contactUnlocked = false;
+
+        if ($isAssignedProvider && $isPaid) {
+            $clientPhone = $b->client?->phone;
+            $contactUnlocked = true;
+        }
+
+        // Expose provider phone to provider, or to client only after payment
+        $providerPhone = null;
+        if ($user) {
+            if ($user->id === $b->provider_id) {
+                $providerPhone = $b->provider?->phone;
+            } elseif ($user->id === $b->client_id && $isPaid) {
+                $providerPhone = $b->provider?->phone;
+            }
+        }
+
         return [
             'id'             => $b->id,
             'service_id'     => $b->service_id,
@@ -140,6 +154,9 @@ class BookingController extends Controller
             'status'         => $b->status,
             'payment_status' => $b->payment_status,
             'created_at'     => $b->created_at,
+            'client_phone'   => $clientPhone,
+            'contact_unlocked' => $contactUnlocked,
+            'provider_phone' => $providerPhone,
         ];
     }
 }

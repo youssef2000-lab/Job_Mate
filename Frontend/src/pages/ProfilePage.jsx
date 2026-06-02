@@ -123,11 +123,6 @@ export default function ProfilePage() {
                       {[service.city, service.country].filter(Boolean).join(', ')}
                     </span>
                   )}
-                  {service.is_verified && (
-                    <span className="verified-badge">
-                      <Shield size={14} /> Vérifié
-                    </span>
-                  )}
                 </div>
               </div>
             </div>

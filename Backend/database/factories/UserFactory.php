@@ -18,18 +18,17 @@ class UserFactory extends Factory
             'phone'       => '06 ' . fake()->numerify('## ## ## ##'),
             'avatar'      => null,   // seeder attaches Unsplash URLs via avatar_url override
             'role'        => 'client',
-            'is_verified' => false,
         ];
     }
 
     public function admin(): static
     {
-        return $this->state(['role' => 'admin', 'is_verified' => true]);
+        return $this->state(['role' => 'admin']);
     }
 
     public function provider(): static
     {
-        return $this->state(['role' => 'provider', 'is_verified' => fake()->boolean(70)]);
+        return $this->state(['role' => 'provider']);
     }
 
     public function client(): static

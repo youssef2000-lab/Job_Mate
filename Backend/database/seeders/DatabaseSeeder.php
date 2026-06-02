@@ -79,7 +79,6 @@ class DatabaseSeeder extends Seeder
             'email'       => 'admin@jobmate.fr',
             'password'    => Hash::make('admin123'),
             'role'        => 'admin',
-            'is_verified' => true,
         ]);
 
         $marc = User::create([
@@ -88,7 +87,6 @@ class DatabaseSeeder extends Seeder
             'password'    => Hash::make('password'),
             'phone'       => '06 12 34 56 78',
             'role'        => 'provider',
-            'is_verified' => true,
         ]);
 
         $client = User::create([
@@ -131,7 +129,6 @@ class DatabaseSeeder extends Seeder
                 'password'    => Hash::make('password'),
                 'phone'       => $pd['phone'],
                 'role'        => 'provider',
-                'is_verified' => $i % 3 !== 2, // ~66% verified
             ]));
         }
 

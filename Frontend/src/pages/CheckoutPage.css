@@ -250,3 +250,48 @@
     font-size: 2.5rem;
   }
 }
+
+/* Checkout confirmation screen additions */
+.contact-info-revealed {
+  margin: 30px auto;
+  padding: 20px;
+  border-radius: var(--radius-md);
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  max-width: 450px;
+  text-align: center;
+}
+
+.phone-display-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.phone-display-row p {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.phone-display-row .btn-copy-phone {
+  background: white;
+  border: 1px solid #cbd5e1;
+  color: #64748b;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+}
+
+.phone-display-row .btn-copy-phone:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
