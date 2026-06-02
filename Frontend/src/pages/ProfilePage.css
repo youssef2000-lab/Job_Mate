@@ -1,639 +1,1480 @@
-.profile-page.marketplace-theme {
-  background: #f8fafc;
+/* ============================================================
+   ProfilePage.css — Service Details Page
+   JobMate Design System — 100% token-consistent
+   Font: Cairo (body) + Outfit (headings)
+   Variables: all from index.css :root
+   ============================================================ */
+
+
+/* ============================================================
+   1. PAGE WRAPPER
+   ============================================================ */
+
+.profile-page {
+  background: var(--surface);       /* #f8fafc — matches BrowsePage bg */
   min-height: 100vh;
-  padding-bottom: 120px;
 }
 
-/* 1. Immersive Top Carousel */
-.marketplace-carousel-wrapper.immersive {
-  position: relative;
-  width: 100%;
-  height: 600px;
-  background: #000;
-  overflow: hidden;
-  margin-bottom: 40px;
+
+/* ============================================================
+   2. PAGE LAYOUT — two-column grid
+   ============================================================ */
+
+.profile-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;  /* main | sticky sidebar */
+  gap: 40px;
+  align-items: start;
 }
 
-.carousel-main {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.carousel-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  background: #000;
-}
-
-.carousel-nav-overlay {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  transform: translateY(-50%);
-  display: flex;
-  justify-content: space-between;
-  padding: 0 40px;
-  pointer-events: none;
-}
-
-.nav-btn {
-  width: 56px;
-  height: 56px;
-  background: rgba(255, 255, 255, 0.95);
-  border: none;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  pointer-events: auto;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  color: #1a202c;
-  transition: all 0.3s;
-}
-
-.nav-btn:hover {
-  background: white;
-  transform: scale(1.1);
-}
-
-.carousel-indicators {
-  position: absolute;
-  bottom: 30px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-}
-
-.indicator {
-  width: 10px;
-  height: 10px;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-}
-
-.indicator.active {
-  background: white;
-  width: 32px;
-  border-radius: 5px;
-}
-
-/* 1.1 Thumbnail Strip Styles */
-.carousel-thumbnails-container {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-  padding: 30px 20px 20px;
-  display: flex;
-  justify-content: center;
-}
-
-.carousel-thumbnails {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  max-width: 90%;
-  padding-bottom: 5px;
-  scrollbar-width: none;
-  /* Hide scrollbar Firefox */
-}
-
-.carousel-thumbnails::-webkit-scrollbar {
-  display: none;
-  /* Hide scrollbar Chrome/Safari */
-}
-
-.thumb-item {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  transition: all 0.3s;
-  flex-shrink: 0;
-  opacity: 0.6;
-}
-
-.thumb-item:hover {
-  opacity: 1;
-  transform: translateY(-2px);
-}
-
-.thumb-item.active {
-  opacity: 1;
-  border-color: white;
-  transform: scale(1.1);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.thumb-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* 2. Main Content Grid (50/50 Layout) */
-.marketplace-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
+/* ---------- LEFT: Main content column ---------------------- */
+.profile-main {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 28px;                         /* consistent card gap throughout */
 }
 
-/* Service Header (Aligned Left) */
-.service-header-left {
+/* ---------- RIGHT: Sticky booking sidebar ------------------ */
+.profile-sidebar {
+  position: sticky;
+  top: calc(var(--header-height) + 24px);  /* respects navbar height */
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  padding: 10px 10px 0 10px;
-}
-
-.service-title-left {
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 8px;
-  letter-spacing: -0.02em;
-}
-
-.service-price-left {
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: var(--primary);
-  margin-bottom: 6px;
-  background: rgba(59, 130, 246, 0.08);
-  padding: 6px 16px;
-  border-radius: 12px;
-  display: inline-block;
-}
-
-.service-category-left {
-  font-size: 1.05rem;
-  color: #64748b;
-  font-weight: 600;
-}
-
-.service-city-left {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 1rem;
-  color: #64748b;
-  font-weight: 500;
-  margin-top: 6px;
-}
-
-/* Raw Bio Text */
-.service-description-raw {
-  margin-top: 25px;
-  font-size: 1.15rem;
-  line-height: 1.8;
-  color: #334155;
-  white-space: pre-wrap;
-  padding-bottom: 30px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  margin-bottom: 30px;
-}
-
-/* Media Interest Card */
-.media-interest-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: white;
-  padding: 30px 40px;
-  border-radius: 20px;
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-  margin-top: 5px;
-  position: relative;
-  z-index: 10;
   gap: 20px;
 }
 
-.interest-content h3 {
-  font-size: 1.4rem;
+
+/* ============================================================
+   3. SHARED CARD SHELL
+   Reuses .glass from index.css + matches dashboard-sidebar style
+   ============================================================ */
+
+.profile-card {
+  background: var(--background);    /* white — same as .service-card */
+  border: 1px solid rgba(226, 232, 240, 0.8);  /* var(--glass-border) family */
+  border-radius: var(--radius-lg);  /* 32px — same as filters-sidebar */
+  padding: 36px;
+  box-shadow: 0 4px 20px -10px rgba(0, 0, 0, 0.05);  /* service-card shadow */
+  transition: box-shadow 0.3s ease;
+}
+
+/* Subtle lift on hover — matches .service-card:hover */
+.profile-card:hover {
+  box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.08),
+              0 4px 12px -4px rgba(59, 130, 246, 0.06);
+}
+
+/* Section headings inside cards — h3 style */
+.profile-card h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
   font-weight: 800;
-  color: #1a202c;
-  margin-bottom: 8px;
-}
-
-.interest-content p {
-  color: #64748b;
-  font-size: 1.05rem;
-  line-height: 1.5;
-  margin: 0;
-}
-
-.media-toggle-btn-new svg {
-  transition: transform 0.4s ease;
-}
-
-.rotate-180 {
-  transform: rotate(180deg);
-}
-
-.profile-media-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 25px;
-  align-items: stretch;
-}
-
-.profile-media-grid>div:only-child {
-  grid-column: 1 / -1;
-}
-
-.seller-card,
-.marketplace-certifications,
-.marketplace-media,
-.marketplace-reviews {
-  background: white;
-  padding: 30px;
-  border-radius: 24px;
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.seller-card {
-  height: auto;
-  align-self: flex-start;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 50%;
-  max-width: 400px;
-  padding: 16px 24px;
-}
-
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 25px;
-  color: #1a202c;
-}
-
-.card-header h3 {
-  font-size: 1.35rem;
-  font-weight: 800;
-  margin: 0;
-}
-
-.verified-icon {
-  color: #3b82f6;
-}
-
-/* Seller Info Card */
-.seller-info-container {
-  display: flex;
-  justify-content: flex-start;
-  width: 100%;
-}
-
-.seller-main {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 0;
-}
-
-.seller-avatar {
-  width: 56px;
-  height: 56px;
-  background: linear-gradient(135deg, var(--primary), #3b82f6);
-  color: white;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  font-weight: 800;
-}
-
-.seller-info h4 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.seller-stats {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
-}
-
-.rating-val {
-  font-weight: 800;
-  color: #1a202c;
-}
-
-.review-count {
-  color: #718096;
-}
-
-.seller-joined {
-  font-size: 0.85rem;
-  color: #718096;
-  margin-top: 4px;
-}
-
-.seller-actions {
-  margin-top: 0;
-  width: 100%;
-}
-
-.btn-secondary-outline.full-width {
-  width: 100%;
-  justify-content: center;
-  padding: 14px;
-}
-
-/* Marketplace Details Card */
-.marketplace-description-text {
-  font-size: 1.05rem;
-  line-height: 1.7;
-  color: #4a5568;
-  margin-bottom: 25px;
-  flex: 1;
-}
-
-.marketplace-meta-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  padding-top: 20px;
-  border-top: 1px solid #f1f5f9;
-}
-
-.detail-row {
+  color: var(--secondary);
+  margin-bottom: 24px;
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #64748b;
-  font-size: 0.9rem;
-  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
-/* 3. Certifications Gallery */
-.marketplace-certifications {
-  margin-top: 10px;
+/* Lucide icon beside h3 */
+.profile-card h3 svg {
+  color: var(--accent);
+  flex-shrink: 0;
 }
 
-.section-header {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 25px;
-}
 
-.section-header h3 {
-  font-size: 1.4rem;
-  font-weight: 800;
-  margin: 0;
-}
+/* ============================================================
+   4. HERO IMAGE
+   ============================================================ */
 
-.section-header p {
-  color: #718096;
-  font-size: 0.9rem;
-  margin: 2px 0 0;
-}
-
-.cert-grid-page {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-}
-
-.cert-item-page {
-  position: relative;
-  aspect-ratio: 4/3;
-  border-radius: 16px;
+.profile-hero {
+  border-radius: var(--radius-lg);  /* 32px — consistent with cards */
   overflow: hidden;
-  border: 1px solid #f1f5f9;
-  cursor: pointer;
+  height: 420px;
+  background: var(--secondary);
+  position: relative;
+  box-shadow: 0 20px 50px -15px rgba(30, 58, 138, 0.12);
 }
 
-.cert-item-page img {
+.profile-hero img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  display: block;
 }
 
-.pdf-preview-box {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f1f5f9;
-  color: #64748b;
-  font-weight: 700;
-  font-size: 1.2rem;
-  transition: transform 0.5s;
+.profile-hero:hover img {
+  transform: scale(1.04);           /* same scale ratio as .content-img hover */
 }
 
-.cert-overlay {
+/* Gradient overlay on hero — mirrors .hero-overlay pattern */
+.profile-hero::after {
+  content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(30, 58, 138, 0.4);
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(2, 6, 23, 0.55) 0%,
+    rgba(2, 6, 23, 0.0) 50%
+  );
+  pointer-events: none;
+}
+
+/* Category pill floating on the hero image */
+.hero-category-pill {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: var(--primary);
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 15px rgba(30, 58, 138, 0.15);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* "Annonce Structurée" badge — reuses .structured-badge token */
+.hero-structured-badge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  background: linear-gradient(135deg,
+    rgba(16, 185, 129, 0.15) 0%,
+    rgba(34, 197, 94, 0.15) 100%
+  );
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+}
+
+
+/* ============================================================
+   5. PROVIDER INFO HEADER
+   Mirrors .card-header from ServiceCard
+   ============================================================ */
+
+.profile-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+}
+
+/* Avatar — same token as .provider-avatar */
+.provider-avatar-lg {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.provider-avatar-lg:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+/* Initials fallback */
+.provider-avatar-initials {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  opacity: 0;
-  transition: all 0.3s;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  border: 3px solid white;
+  box-shadow: 0 8px 24px rgba(30, 58, 138, 0.2);
+  flex-shrink: 0;
 }
 
-.cert-item-page:hover img,
-.cert-item-page:hover .pdf-preview-box {
+.profile-header > div {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Service title (h1 in context) */
+.profile-header h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--secondary);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+/* Provider name subtitle */
+.service-title-sub {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+/* Meta row: rating + location + verified */
+.profile-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Rating badge — exact clone of .rating-val */
+.rating-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #f59e0b;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 5px 12px;
+  background: rgba(245, 158, 11, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+/* Location badge */
+.location-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  background: var(--surface);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+/* Verified badge */
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #059669;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  background: rgba(16, 185, 129, 0.08);
+  border-radius: 8px;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+
+/* ============================================================
+   6. DESCRIPTION SECTION
+   ============================================================ */
+
+.profile-description p {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: #475569;
+  font-weight: 500;
+  white-space: pre-wrap;             /* preserve line breaks from DB */
+}
+
+
+/* ============================================================
+   7. GALLERY GRID
+   ============================================================ */
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.gallery-thumb {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-md);   /* 12px */
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  display: block;
+  background: var(--surface);
+}
+
+.gallery-thumb:hover {
+  transform: scale(1.04) translateY(-4px);
+  box-shadow: 0 12px 28px -8px rgba(30, 58, 138, 0.18);
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+/* Lightbox overlay */
+.gallery-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(2, 6, 23, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+.gallery-lightbox img {
+  max-width: 90vw;
+  max-height: 88vh;
+  border-radius: var(--radius-md);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+  object-fit: contain;
+}
+
+.gallery-lightbox-close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+
+.gallery-lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.2);
   transform: scale(1.1);
 }
 
-.cert-item-page:hover .cert-overlay {
-  opacity: 1;
+
+/* ============================================================
+   8. CERTIFICATIONS
+   ============================================================ */
+
+.cert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
 }
 
-/* 4. Media & Reviews Prominence */
-.marketplace-media {
-  background: white;
-}
-
-.marketplace-video-wrapper {
-  border-radius: 20px;
+.cert-item {
+  position: relative;
+  border-radius: var(--radius-md);
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  aspect-ratio: 16/9;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  group: true;
+}
+
+.cert-item:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 0 8px 24px -8px rgba(30, 58, 138, 0.14);
+  transform: translateY(-3px);
+}
+
+.cert-thumb {
   width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
 }
 
-.marketplace-video-wrapper iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
+.cert-item:hover .cert-thumb {
+  transform: scale(1.04);
 }
 
-/* Lightbox PDF Viewer */
-.lightbox-pdf-viewer {
-  width: 80vw;
-  height: 80vh;
-  border: none;
-  background: white;
-  border-radius: 12px;
-}
-
-.review-card-marketplace {
-  background: #f8fafc;
-  padding: 25px;
-  border-radius: 20px;
-  margin-bottom: 15px;
-  border: 1px solid #f1f5f9;
-}
-
-.review-user-row {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 15px;
-}
-
-.u-avatar {
-  width: 44px;
-  height: 44px;
-  background: white;
-  border: 1px solid #f1f5f9;
-  border-radius: 50%;
+/* Hover overlay with download button */
+.cert-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 800;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+.cert-item:hover .cert-overlay {
+  opacity: 1;
+}
+
+.cert-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: white;
   color: var(--primary);
-}
-
-.u-comment {
-  font-size: 1.05rem;
-  line-height: 1.6;
-  color: #334155;
-}
-
-/* 5. Sticky Marketplace Footer */
-.marketplace-action-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(20px);
-  padding: 20px 0;
-  z-index: 1000;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.price-val {
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: #1e293b;
-}
-
-.btn-primary-marketplace {
-  background: var(--primary);
-  color: white;
+  border-radius: var(--radius-sm);   /* 8px */
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: 'Cairo', sans-serif;
   border: none;
-  padding: 16px 60px;
-  border-radius: 16px;
-  font-weight: 800;
-  font-size: 1.1rem;
-  box-shadow: 0 10px 25px rgba(30, 58, 138, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Mobile Responsive */
-@media (max-width: 900px) {
-
-  .profile-media-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .seller-card {
-    width: 100%;
-    max-width: none;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 20px;
-  }
-
-  .seller-actions {
-    width: 100%;
-  }
-
-  .marketplace-carousel-wrapper.immersive {
-    height: 400px;
-  }
-
-  .cert-grid-page {
-    grid-template-columns: 1fr 1fr;
-  }
+.cert-view-btn:hover {
+  transform: scale(1.05);
+  background: var(--surface);
 }
 
-@media (max-width: 600px) {
-  .marketplace-container {
-    padding: 0 15px;
-  }
-
-  .cert-grid-page {
-    grid-template-columns: 1fr;
-  }
-
-  .btn-primary-marketplace {
-    width: 100%;
-    padding: 14px;
-    margin-top: 10px;
-  }
-
-  .footer-flex {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
-/* --- No Reviews State --- */
-.no-reviews-state {
+/* PDF cert fallback */
+.cert-pdf-icon {
+  width: 100%;
+  aspect-ratio: 3 / 4;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  padding: 40px 20px;
-  background: rgba(248, 250, 252, 0.5);
-  border-radius: 20px;
-  border: 1px dashed var(--border);
+  gap: 12px;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
   color: var(--text-muted);
-  gap: 15px;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
-.no-reviews-state .info-icon {
-  opacity: 0.5;
+.cert-pdf-icon svg {
+  color: #ef4444;
+}
+
+
+/* ============================================================
+   9. VIDEO SECTION
+   ============================================================ */
+
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--secondary);
+  box-shadow: 0 8px 30px -10px rgba(0, 0, 0, 0.2);
+}
+
+.video-wrapper iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+/* Play button overlay for non-embedded videos */
+.video-play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2, 6, 23, 0.45);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.video-play-overlay:hover {
+  background: rgba(2, 6, 23, 0.3);
+}
+
+.video-play-btn {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  box-shadow: 0 8px 30px rgba(30, 58, 138, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  cursor: pointer;
+}
+
+.video-play-btn:hover {
+  transform: scale(1.12);
+  box-shadow: 0 14px 40px rgba(30, 58, 138, 0.4);
+}
+
+.video-play-btn svg {
+  margin-left: 4px;                  /* optical center for play icon */
+}
+
+.video-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+/* ============================================================
+   10. REVIEWS SECTION
+   ============================================================ */
+
+/* Average rating summary bar */
+.reviews-summary {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 24px 28px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.reviews-avg-score {
+  font-family: 'Outfit', sans-serif;
+  font-size: 3.2rem;
+  font-weight: 900;
+  color: var(--secondary);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.reviews-avg-right {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reviews-stars-row {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.reviews-count-label {
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Individual review cards */
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.review-item {
+  padding: 20px 24px;
+  border-radius: var(--radius-md);
+  background: white;
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  transition: all 0.3s ease;
+}
+
+.review-item:hover {
+  border-color: rgba(59, 130, 246, 0.2);
+  box-shadow: 0 4px 16px -6px rgba(30, 58, 138, 0.08);
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+/* Reviewer avatar — mirrors provider-avatar token */
+.review-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.review-avatar-initials {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.review-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.review-author {
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--secondary);
+}
+
+.review-date {
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.review-comment {
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #475569;
+  font-weight: 500;
+}
+
+/* Empty reviews state — matches .no-providers-home style */
+.no-reviews {
+  text-align: center;
+  color: var(--text-muted);
+  font-family: 'Cairo', sans-serif;
+  font-size: 1rem;
+  padding: 32px 20px;
+  font-weight: 600;
+}
+
+.no-reviews svg {
+  display: block;
+  margin: 0 auto 12px;
+  color: var(--border);
+}
+
+
+/* ============================================================
+   11. BOOKING PANEL (sidebar)
+   Mirrors .dashboard-sidebar structure exactly
+   ============================================================ */
+
+.booking-panel {
+  background: white;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: var(--radius-lg);   /* 32px */
+  padding: 32px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+}
+
+/* Sticky wrapper override for sidebar */
+.sticky-panel {
+  position: relative;               /* z-index handled by parent sticky */
+}
+
+/* Price display */
+.booking-price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.price-amount {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: var(--primary);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.price-unit {
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Form group — mirrors .form-group from Auth.css */
+.booking-panel .form-group {
+  margin-bottom: 18px;
+}
+
+.booking-panel .form-group label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--secondary);
+  margin-bottom: 8px;
+}
+
+.booking-panel .form-group label svg {
+  color: var(--text-muted);
+}
+
+.booking-panel textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);   /* 8px */
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-main);
+  background: var(--surface);
+  resize: vertical;
+  min-height: 110px;
+  transition: all 0.25s ease;
+  outline: none;
+}
+
+.booking-panel textarea:focus {
+  border-color: var(--accent);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.booking-panel textarea::placeholder {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Submit button — full .btn-primary token */
+.booking-panel .btn-block {
+  width: 100%;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 800;
+  border-radius: var(--radius-md);
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 4px 15px rgba(30, 58, 138, 0.2);
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.booking-panel .btn-block:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(30, 58, 138, 0.3);
+}
+
+.booking-panel .btn-block:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Login hint under the button */
+.login-hint {
+  text-align: center;
+  margin-top: 12px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.login-hint .btn-link {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Security guarantee notice */
+.booking-guarantee {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: rgba(16, 185, 129, 0.07);
+  border: 1px solid rgba(16, 185, 129, 0.18);
+  border-radius: var(--radius-sm);
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.82rem;
+  color: #059669;
+  font-weight: 600;
+}
+
+.booking-guarantee svg {
+  flex-shrink: 0;
+}
+
+/* Booking success state */
+.booked-confirmation {
+  text-align: center;
+  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.booked-icon {
+  color: #059669;
+  animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.booked-confirmation p {
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+@keyframes bounceIn {
+  0%   { transform: scale(0); opacity: 0; }
+  60%  { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+
+/* ============================================================
+   12. PROVIDER INFO SIDEBAR CARD
+   (separate from the booking form, above it)
+   ============================================================ */
+
+.provider-sidebar-card {
+  background: white;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: 0 4px 20px -10px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.provider-sidebar-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  margin: 0 auto 14px;
+  display: block;
+}
+
+.provider-sidebar-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--secondary);
+  margin-bottom: 4px;
+}
+
+.provider-sidebar-role {
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+/* Provider stats row */
+.provider-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.provider-stat {
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 10px 8px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.provider-stat-value {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: var(--primary);
+  display: block;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+
+.provider-stat-label {
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+
+/* ============================================================
+   13. SIMILAR SERVICES SECTION
+   Uses the same .providers-grid + ServiceCard pattern from HomePage
+   ============================================================ */
+
+.similar-section {
+  margin-top: 16px;
+}
+
+.similar-section .section-header {
+  margin-bottom: 28px;
+}
+
+.similar-section h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--secondary);
+  letter-spacing: -0.03em;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.similar-section h2 span.premium-highlight {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--accent) 0%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Grid reuses .providers-grid from HomePage */
+.similar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+
+/* ============================================================
+   14. SKELETON LOADERS
+   Matches the shimmer pattern from Dashboard.css
+   ============================================================ */
+
+@keyframes shimmer {
+  0%   { background-position:  200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f1f5f9 25%,
+    #e2e8f0 50%,
+    #f1f5f9 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: var(--radius-md);
+}
+
+.skeleton-hero {
+  height: 420px;
+  border-radius: var(--radius-lg);
+}
+
+.skeleton-card {
+  height: 260px;
+}
+
+.skeleton-text {
+  height: 16px;
+  margin-bottom: 10px;
+}
+
+.skeleton-text.short {
+  width: 40%;
+}
+
+.profile-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+
+/* ============================================================
+   15. EMPTY STATES & ERRORS
+   ============================================================ */
+
+.profile-not-found {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.profile-not-found svg {
+  color: var(--border);
+  margin-bottom: 20px;
+}
+
+.profile-not-found h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--secondary);
+  margin-bottom: 10px;
+}
+
+.profile-not-found p {
+  color: var(--text-muted);
+  font-family: 'Cairo', sans-serif;
+  margin-bottom: 28px;
+}
+
+
+/* ============================================================
+   16. BACK NAVIGATION
+   ============================================================ */
+
+.profile-back-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  width: fit-content;
+  transition: color 0.2s ease;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.profile-back-nav:hover {
   color: var(--primary);
 }
 
-.no-reviews-state p {
+.profile-back-nav:hover svg {
+  transform: translateX(-3px);
+}
+
+.profile-back-nav svg {
+  transition: transform 0.2s ease;
+}
+
+
+/* ============================================================
+   17. BREADCRUMB
+   ============================================================ */
+
+.profile-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.profile-breadcrumb a {
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+}
+
+.profile-breadcrumb a:hover {
+  color: var(--primary);
+}
+
+.profile-breadcrumb .sep {
+  color: var(--border);
+}
+
+.profile-breadcrumb .current {
+  color: var(--secondary);
+  font-weight: 700;
+}
+
+
+/* ============================================================
+   18. CONTACT REVEALED (post-payment)
+   ============================================================ */
+
+.contact-revealed-card {
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.08) 0%,
+    rgba(34, 197, 94, 0.06) 100%
+  );
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: var(--radius-md);
+  padding: 20px 24px;
+}
+
+.contact-revealed-card h4 {
+  font-family: 'Outfit', sans-serif;
   font-size: 1rem;
-  max-width: 300px;
-  line-height: 1.5;
+  font-weight: 800;
+  color: #059669;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contact-phone {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--secondary);
+  letter-spacing: 0.02em;
+}
+
+
+/* ============================================================
+   19. RESPONSIVE — TABLET  (max 1200px)
+   ============================================================ */
+
+@media (max-width: 1200px) {
+  .profile-layout {
+    grid-template-columns: 1fr 340px;
+    gap: 28px;
+  }
+
+  .profile-hero {
+    height: 360px;
+  }
+
+  .profile-card {
+    padding: 28px;
+  }
+
+  .profile-header h1 {
+    font-size: 1.65rem;
+  }
+
+  .price-amount {
+    font-size: 2rem;
+  }
+}
+
+
+/* ============================================================
+   20. RESPONSIVE — TABLET  (max 1024px)
+   ============================================================ */
+
+@media (max-width: 1024px) {
+  .profile-layout {
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
+  }
+
+  .booking-panel {
+    padding: 24px;
+  }
+
+  .similar-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+/* ============================================================
+   21. RESPONSIVE — MOBILE  (max 900px)
+   Full single-column layout
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .profile-layout {
+    grid-template-columns: 1fr;          /* stack to single column */
+  }
+
+  /* Sidebar moves below the main column */
+  .profile-sidebar {
+    position: static;                    /* no longer sticky */
+    order: -1;                           /* booking panel first on mobile */
+  }
+
+  .profile-hero {
+    height: 280px;
+  }
+
+  .profile-card {
+    border-radius: var(--radius-md);     /* 12px on mobile — breathes better */
+    padding: 22px;
+  }
+
+  .profile-header h1 {
+    font-size: 1.45rem;
+  }
+
+  .provider-avatar-lg,
+  .provider-avatar-initials {
+    width: 64px;
+    height: 64px;
+  }
+
+  .provider-avatar-initials {
+    font-size: 1.5rem;
+  }
+
+  .profile-meta {
+    gap: 8px;
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+  }
+
+  .cert-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+
+  .booking-panel {
+    border-radius: var(--radius-md);
+    padding: 20px;
+  }
+
+  .price-amount {
+    font-size: 1.9rem;
+  }
+
+  .reviews-summary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 18px 20px;
+  }
+
+  .reviews-avg-score {
+    font-size: 2.6rem;
+  }
+
+  .similar-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .similar-section h2 {
+    font-size: 1.5rem;
+  }
+}
+
+
+/* ============================================================
+   22. RESPONSIVE — SMALL MOBILE  (max 576px)
+   ============================================================ */
+
+@media (max-width: 576px) {
+  .profile-hero {
+    height: 220px;
+    border-radius: var(--radius-md);
+  }
+
+  .hero-category-pill {
+    font-size: 0.72rem;
+    padding: 5px 10px;
+  }
+
+  .profile-header {
+    gap: 14px;
+  }
+
+  .profile-header h1 {
+    font-size: 1.25rem;
+  }
+
+  .service-title-sub {
+    font-size: 0.95rem;
+  }
+
+  .profile-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 18px;
+  }
+
+  .profile-card {
+    padding: 18px;
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .cert-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .review-item {
+    padding: 16px 18px;
+  }
+
+  .review-header {
+    gap: 10px;
+  }
+
+  .review-avatar,
+  .review-avatar-initials {
+    width: 38px;
+    height: 38px;
+  }
+
+  .review-avatar-initials {
+    font-size: 0.95rem;
+  }
+
+  .review-author {
+    font-size: 0.88rem;
+  }
+
+  .review-comment {
+    font-size: 0.88rem;
+  }
+
+  .booking-panel {
+    padding: 18px;
+  }
+
+  .price-amount {
+    font-size: 1.7rem;
+  }
+
+  .booking-guarantee {
+    font-size: 0.78rem;
+    padding: 10px 12px;
+  }
+
+  .booking-panel .btn-block {
+    padding: 12px 20px;
+    font-size: 0.95rem;
+  }
+
+  .provider-sidebar-card {
+    padding: 20px;
+  }
+
+  .provider-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .skeleton-hero {
+    height: 220px;
+    border-radius: var(--radius-md);
+  }
+}
+
+
+/* ============================================================
+   23. ANIMATIONS — entry transitions
+   Complements Framer Motion (used by the page components)
+   These handle non-animated fallback states
+   ============================================================ */
+
+/* Slide up for cards — matches .fade-in keyframe in index.css */
+.profile-card {
+  animation: profileCardIn 0.5s ease both;
+}
+
+@keyframes profileCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger delays for sequential cards */
+.profile-main > *:nth-child(1) { animation-delay: 0.05s; }
+.profile-main > *:nth-child(2) { animation-delay: 0.10s; }
+.profile-main > *:nth-child(3) { animation-delay: 0.15s; }
+.profile-main > *:nth-child(4) { animation-delay: 0.20s; }
+.profile-main > *:nth-child(5) { animation-delay: 0.25s; }
+.profile-main > *:nth-child(6) { animation-delay: 0.30s; }
+
+/* Sidebar slides in from right */
+.profile-sidebar {
+  animation: sidebarIn 0.6s ease 0.15s both;
+}
+
+@keyframes sidebarIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+
+/* ============================================================
+   24. PRINT STYLES
+   ============================================================ */
+
+@media print {
+  .profile-sidebar { position: static; }
+  .profile-layout  { grid-template-columns: 1fr; }
+  .booking-panel   { break-inside: avoid; }
+  .profile-hero    { height: 240px; }
 }
